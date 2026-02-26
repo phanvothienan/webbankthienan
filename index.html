@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Thanh Toán</title>
+<style>
+body { font-family: Arial; text-align:center; background:#111; color:white; }
+.box { background:#222; padding:20px; margin:20px auto; width:300px; border-radius:10px; }
+input, button { padding:10px; margin:5px; width:90%; border:none; border-radius:5px; }
+button { background:#00c3ff; color:black; font-weight:bold; cursor:pointer; }
+.qr { width:200px; margin-top:10px; }
+a { color:#00c3ff; }
+</style>
+</head>
+<body>
+
+<h2>Thanh Toán Chuyển Khoản</h2>
+
+<div class="box">
+<input type="number" id="amount" placeholder="Nhập số tiền">
+<button onclick="createOrder()">Tạo Thanh Toán</button>
+
+<div id="paymentBox" style="display:none;">
+    <p><b>Quét mã QR bên dưới</b></p>
+    <img src="https://ibb.co/ZRQrwBj5" class="qr">
+    <p>Nội dung chuyển khoản:</p>
+    <p id="content" style="color:yellow;"></p>
+    <button onclick="done()">Tôi đã chuyển khoản</button>
+    <p>Liên hệ Facebook để báo:</p>
+    <a href="https://www.facebook.com/profile.php?id=61588092839588" target="_blank">Facebook Admin</a>
+</div>
+</div>
+
+<script>
+function createOrder(){
+    let amount = document.getElementById("amount").value;
+    if(!amount) return alert("Nhập số tiền!");
+
+    let code = "THIENANPAY" + Math.floor(1000 + Math.random()*9000);
+    document.getElementById("content").innerText = code;
+    document.getElementById("paymentBox").style.display = "block";
+
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders.push({amount: amount, code: code, status: "Chờ duyệt"});
+    localStorage.setItem("orders", JSON.stringify(orders));
+}
+
+function done(){
+    alert("Vui lòng nhắn Facebook để admin duyệt.");
+}
+</script>
+
+</body>
+</html>
