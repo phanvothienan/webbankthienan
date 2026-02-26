@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin</title>
+<style>
+body { font-family: Arial; background:#111; color:white; text-align:center; }
+table { margin:auto; border-collapse: collapse; }
+td, th { border:1px solid white; padding:8px; }
+button { padding:5px; margin:2px; }
+</style>
+</head>
+<body>
+
+<h2>Admin Duyệt Đơn</h2>
+
+<div id="loginBox">
+<input type="password" id="pass" placeholder="Nhập mật khẩu admin">
+<button onclick="login()">Đăng nhập</button>
+</div>
+
+<div id="adminPanel" style="display:none;">
+<table>
+<thead>
+<tr>
+<th>Số tiền</th>
+<th>Nội dung</th>
+<th>Trạng thái</th>
+<th>Hành động</th>
+</tr>
+</thead>
+<tbody id="orderList"></tbody>
+</table>
+</div>
+
+<script>
+const ADMIN_PASS = "0792908994";
+
+function login(){
+    let input = document.getElementById("pass").value;
+    if(input === ADMIN_PASS){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("adminPanel").style.display="block";
+        loadOrders();
+    } else {
+        alert("Sai mật khẩu!");
+    }
+}
+
+function loadOrders(){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    let html = "";
+    orders.forEach((o,i)=>{
+        html += `<tr>
+        <td>${o.amount}</td>
+        <td>${o.code}</td>
+        <td>${o.status}</td>
+        <td>
+        <button onclick="approve(${i})">Duyệt</button>
+        <button onclick="removeOrder(${i})">Xoá</button>
+        </td>
+        </tr>`;
+    });
+    document.getElementById("orderList").innerHTML = html;
+}
+
+function approve(i){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders[i].status = "Đã duyệt";
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
+}
+
+function removeOrder(i){
+    let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+    orders.splice(i,1);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    loadOrders();
+}
+</script>
+
+</body>
+</html>
